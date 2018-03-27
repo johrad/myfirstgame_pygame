@@ -1,6 +1,6 @@
 import pygame
 pygame.init()
-
+print("FIX LE CLASSES AND MAKE IT OO")
 
 def check_for_error():
     if pygame.init() == (6, 0):
@@ -23,8 +23,8 @@ blue = (000, 000, 255)
 
 
 # General settings
-width = 700
-height = 550
+width = 500
+height = 500
 caption = "This is a cool window"
 version = "0.00.2"
 Fill_color = black
@@ -55,7 +55,7 @@ jumping_sound = pygame.mixer.Sound('jump.ogg')
 background_music = pygame.mixer.music.load('Backround_intense.ogg')
 pygame.mixer.music.set_volume(m_volume)
 
-pygame.mixer.music.play(loops= -1, start=0.0) # Starts background music
+pygame.mixer.music.play(-1, 0.0) # Starts background music
 
 # Setting "rectangle" details
 x_pos = 250
