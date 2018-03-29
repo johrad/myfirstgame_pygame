@@ -1,6 +1,6 @@
 import pygame
 pygame.init()
-print("FIX LE CLASSES AND MAKE IT OO")
+
 
 def check_for_error():
     if pygame.init() == (6, 0):
@@ -11,37 +11,87 @@ def check_for_error():
     Video_driver = pygame.display.get_driver()
     print(Video_driver)
 
+
 check_for_error()
 
 
-# Basic color pool
-black = (000, 000, 000)
-white = (255, 255, 255)
-red = (255, 000, 000)
-green = (000, 255, 000)
-blue = (000, 000, 255)
+class Settings():
+    def __init__(self):
+        self.black = (000, 000, 000)
+        self.white = (255, 255, 255)
+        self.red = (255, 000, 000)
+        self.green = (000, 255, 000)
+        self.blue = (000, 000, 255)
+
+    def display_settings(self):
+        self.width = 500
+        self.height = 500
+        self.caption = "This is a cool window"
+        self.version = "0.00.2"
+        self.Fill_color = black
+        # self.m_volume = 0.3
+
+    def drawdisplay(self):
+        screen = pygame.display.set_mode((width, height))
+        pygame.display.set_caption(caption)
+        screen.fill(Fill_color)
+
+        # Set version text
+        my_font = pygame.font.SysFont('Arial', 15)
+        text_surface = my_font.render(("Version " + version), False, (blue))
+        screen.blit(text_surface, (0, 0))
 
 
-# General settings
-width = 500
-height = 500
-caption = "This is a cool window"
-version = "0.00.2"
-Fill_color = black
-m_volume = 0.3
+class Player():
+    def __init__(self):
+        self.x_pos = 250
+        self.y_pos = 250
+        self.npc_color = (255, 0, 0)
+        self.npc_width = 15
+        self.npc_height = 15
+        self.npc_vel = 5
+        self.jumping_height = 10
+
+    def movement(self, key):
+
+        if key[pygame.K_LEFT] and x_pos > npc_vel:
+            x_pos -= npc_vel
+
+        if key[pygame.K_RIGHT] and x_pos < width - npc_vel - npc_width:
+            x_pos += npc_vel
+
+        if key[pygame.K_SPACE]:
+            if jumping_height == 10:
+                jumping_sound.play()
+            jumping = True
+
+        if not(jumping):
+            if key[pygame.K_UP] and y_pos > npc_vel:
+                y_pos -= npc_vel
+
+            elif key[pygame.K_DOWN] and y_pos < height - npc_height - npc_vel:
+                y_pos += npc_vel
+
+        else:
+            if jumping_height >= -10:
+                neg_num = 1
+
+                if jumping_height < 0:
+                    neg_num = -1
+                y_pos -= (jumping_height ** 2) * 0.2 * neg_num
+                jumping_height -= 1
+
+            else:
+                jumping = False
+                jumping_height = 10
 
 
 # Makes window and gets display caption
-screen = pygame.display.set_mode((width, height))
-pygame.display.set_caption(caption)
-screen.fill(Fill_color)
+
 
 
 # Display text
 pygame.font.init()
-my_font = pygame.font.SysFont('Arial', 15)
-text_surface = my_font.render(("Version " + version), False, (blue))
-screen.blit(text_surface, (0, 0))
 
 
 # Flips display
@@ -55,16 +105,10 @@ jumping_sound = pygame.mixer.Sound('jump.ogg')
 background_music = pygame.mixer.music.load('Backround_intense.ogg')
 pygame.mixer.music.set_volume(m_volume)
 
-pygame.mixer.music.play(-1, 0.0) # Starts background music
+pygame.mixer.music.play(-1, 0.0)  # Starts background music
 
 # Setting "rectangle" details
-x_pos = 250
-y_pos = 250
-npc_color = (255, 0, 0)
-npc_width = 15
-npc_height = 15
-npc_vel = 5
-jumping_height = 10
+
 
 # States of npc
 jumping = False
@@ -91,42 +135,7 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-
-
     key = pygame.key.get_pressed()
-
-    if key[pygame.K_LEFT] and x_pos > npc_vel:
-        x_pos -= npc_vel
-
-    if key[pygame.K_RIGHT] and x_pos < width - npc_vel - npc_width:
-        x_pos += npc_vel
-
-
-    if key[pygame.K_SPACE]:
-        if jumping_height == 10:
-            jumping_sound.play()
-        jumping = True
-    if not(jumping):
-        if key[pygame.K_UP] and y_pos > npc_vel:
-            y_pos -= npc_vel
-
-        elif key[pygame.K_DOWN] and y_pos < height - npc_height - npc_vel:
-            y_pos += npc_vel
-
-    else:
-        if jumping_height >= -10:
-            neg_num = 1
-            if jumping_height < 0:
-                neg_num = -1
-            y_pos -= (jumping_height ** 2) * 0.2 * neg_num
-            jumping_height -= 1
-
-
-        else:
-            jumping = False
-            jumping_height = 10
-
-
 
     screen.fill(Fill_color)
     pygame.draw.rect(screen, npc_color, (x_pos, y_pos, npc_width, npc_height))
@@ -138,9 +147,8 @@ while running:
     screen.blit(text_surface, (0, 0))
     pygame.display.flip()
 
-
     if key[pygame.K_ESCAPE]:
-       running = False
+        running = False
 
 
 print("Thank you for playing the game\n(C) Johan-Petter R. Dragic")
