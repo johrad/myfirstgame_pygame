@@ -6,25 +6,29 @@ pygame.mixer.init()
 clock = pygame.time.Clock()
 
 print(pygame.init())
-print(pygame.display.get_driver())
+print("Video driver:{}".format(pygame.display.get_driver()))
 
 
 class Drawdisplay:
     def __init__(self):
+        global width
+        global height
+        width = 500
+        height = 500
         global fill_color
-        global display
-        self.fill_color = (255, 255, 0)
-
-        self.my_font = pygame.font.SysFont('Arial', 15)
+        fill_color = (255, 255, 0)
+        self.my_font = pygame.font.SysFont('Arial Black', 17)
 
     def draw_window(self):
-        display = pygame.display.set_mode((500, 500))
-        display.fill(self.fill_color)
+        global display
+        display = pygame.display.set_mode((width, height))
+        display.fill(fill_color)
         pygame.display.flip()
 
     def draw_text(self):
         text_surface = self.my_font.render(("Version " + version), False, ((0, 0, 0)))
-        display.blit(text_surface, (0, 0))
+        display.blit(text_surface, (width/1.2, height/2))
+        pygame.display.flip()
 
 
 class Player():
@@ -42,19 +46,19 @@ class Player():
     def movement(self):
         pass
 
-    def draw(self):
+    def npc_draw(self):
         pygame.draw.rect(display, self.npc_color, (self.x_pos,
                                                    self.y_pos, self.npc_width,
                                                    self.npc_height))
         pygame.display.flip()
 
 
-# Give instances to classes
-display = Drawdisplay()
+game_window = Drawdisplay()
 man = Player()
 
-
-man.draw()
+game_window.draw_window()
+game_window.draw_text()
+man.npc_draw()
 running = True
 while running:
     clock.tick(60)
@@ -69,9 +73,13 @@ while running:
         if key[pygame.K_w] and man.y_pos > man.npc_vel:
             man.y_pos -= man.npc_vel
 
-    if key[pygame.K_ESCAPE]:
+    if key[pygame.K_ESCAPE] or (key[pygame.K_e] and (key[pygame.K_LCTRL] or key[pygame.K_RSHIFT])):
         running = False
-    man.draw()
+
+    game_window.draw_window()
+    man.npc_draw()
+    game_window.draw_text()
+
 
 pygame.quit()
 print("Thank you for playing!")
