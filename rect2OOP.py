@@ -27,12 +27,13 @@ class Drawdisplay:
 
     def draw_text(self):
         text_surface = self.my_font.render(("Version " + version), False, ((0, 0, 0)))
-        display.blit(text_surface, (width/1.2, height/2))
+        display.blit(text_surface, (0, 0))
         pygame.display.flip()
 
 
 class Player():
     def __init__(self):
+        global jumping
         self.x_pos = 250
         self.y_pos = 250
         self.npc_color = (255, 0, 255)
@@ -66,12 +67,28 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        else:
-            pass
+
+    if key[pygame.K_SPACE]:
+        man.jumping = True
 
     if not(man.jumping):
         if key[pygame.K_w] and man.y_pos > man.npc_vel:
             man.y_pos -= man.npc_vel
+        if key[pygame.K_s] and man.y_pos < (height - man.npc_height - man.npc_vel):
+            man.y_pos += man.npc_vel
+    else:
+        if man.jumping_height >= -10:
+            magic_jump_num = 1
+
+            if man.jumping_height < 0:
+                magic_jump_num = -1
+
+            man.y_pos -= (man.jumping_height ** 2) * 0.25 * magic_jump_num
+            man.jumping_height -= 1
+            # "magic_jump_num" turns the character around whem jumping
+        else:
+            man.jumping = False
+            man.jumping_height = 10
 
     if key[pygame.K_ESCAPE] or (key[pygame.K_e] and (key[pygame.K_LCTRL] or key[pygame.K_RSHIFT])):
         running = False
