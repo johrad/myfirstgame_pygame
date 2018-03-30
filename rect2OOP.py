@@ -127,4 +127,4 @@ while running:
 
 
 pygame.quit()
-print("Thank you for playing!")
+print("Thank you for playing!\n(C) Johan-Petter R. Dragic")
