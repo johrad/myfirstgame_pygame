@@ -2,7 +2,7 @@ import pygame
 version = "0.00.3"
 pygame.init()
 pygame.font.init()
-pygame.mixer.init()
+pygame.mixer.init(44100, 16, 2, 4096)
 clock = pygame.time.Clock()
 
 
@@ -23,9 +23,11 @@ class Drawdisplay():
         fill_color = (255, 255, 0)
         self.my_font = pygame.font.SysFont('Arial Black', 17)
 
-    def draw_window(self):
+    def window_init(self):
         global display
         display = pygame.display.set_mode((width, height))
+
+    def draw_window(self):
         display.fill(fill_color)
         pygame.display.flip()
 
@@ -37,32 +39,26 @@ class Drawdisplay():
         pygame.display.flip()
 
 
-class Player():
+class Player(pygame.sprite.Sprite):
     def __init__(self):
-        global jumping
-        self.x_pos = 250
-        self.y_pos = 250
-        self.npc_color = (255, 0, 255)
-        self.npc_width = 15
-        self.npc_height = 15
-        self.npc_vel = 5
-        self.jumping_height = 10
-        self.jumping = False
-        self.standing = True
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.Surface((50, 50))
+        self.image.fill((0, 0, 0))
+        self.rect = self.image.get_rect()
+        self.rect.center = (width / 2, height / 2)
 
-    def movement(self):
+    def draw(self):
         pass
+        # def movement(self):
+        #     pass
 
-    def npc_draw(self):
-        pygame.draw.rect(display, self.npc_color, (self.x_pos,
-                                                   self.y_pos, self.npc_width,
-                                                   self.npc_height))
-        pygame.display.flip()
+        #     pygame.display.flip()
 
 
 def mixer_start(vol):
     mixer_volume = vol
     global jumping_sound_1
+
     jumping_sound_1 = pygame.mixer.Sound('jump.ogg')
     pygame.mixer.music.load('Backround_intense.ogg')
     pygame.mixer.music.set_volume(mixer_volume)
@@ -71,60 +67,34 @@ def mixer_start(vol):
 
 
 game_window = Drawdisplay()
-man = Player()
+player = Player()
 
-mixer_start(0.35)
+# mixer_start(0.35)
 
+all_sprites = pygame.sprite.Group(player)
+game_window.window_init()
 game_window.draw_window()
 game_window.draw_text()
-man.npc_draw()
+
 running = True
 while running:
-    clock.tick(60)
+    clock.tick(30)
     key = pygame.key.get_pressed()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
 
-    if key[pygame.K_SPACE]:
-        man.jumping = True
-
-        if man.jumping_height == 10:
-            jumping_sound_1.play()
-    if not(man.jumping):
-        if (key[pygame.K_w] or key[pygame.K_UP]) and (man.y_pos > man.npc_vel):
-            man.y_pos -= man.npc_vel
-        if (key[pygame.K_s] or key[pygame.K_DOWN]) and (man.y_pos <
-                                                        (height - man.npc_height - man.npc_vel)):
-            man.y_pos += man.npc_vel
-    else:
-        if man.jumping_height >= -10:
-            magic_jump_num = 1
-
-            if man.jumping_height < 0:
-                magic_jump_num = -1
-
-            man.y_pos -= (man.jumping_height ** 2) * 0.2 * magic_jump_num
-            man.jumping_height -= 1
-            # "magic_jump_num" turns the character around when jumping
-        else:
-            man.jumping = False
-            man.jumping_height = 10
-
-    if (key[pygame.K_d] or key[pygame.K_RIGHT]) and (man.x_pos <
-                                                     (width - man.npc_vel - man.npc_vel)):
-        man.x_pos += man.npc_vel
-
-    if (key[pygame.K_a] or key[pygame.K_LEFT]) and (man.x_pos > man.npc_vel):
-        man.x_pos -= man.npc_vel
-
-    if key[pygame.K_ESCAPE] or (key[pygame.K_e] and (key[pygame.K_LCTRL] or key[pygame.K_RSHIFT])):
+    if key[pygame.K_ESCAPE]:
         running = False
 
-    game_window.draw_window()
-    man.npc_draw()
+    # Update
+    all_sprites.update()
+
+    # Drawing stuff
+    game_window.draw_window
+    all_sprites.draw(display)
     game_window.draw_text()
 
 
 pygame.quit()
-print("Thank you for playing!")
+print("Thank you for playing!\n(C) Johan-Petter R. Dragic")
