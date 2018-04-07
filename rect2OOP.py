@@ -1,16 +1,15 @@
 import pygame
+import os
 version = "0.00.3"
 pygame.init()
 pygame.font.init()
 pygame.mixer.init(44100, 16, 2, 4096)
 clock = pygame.time.Clock()
 
-
-if pygame.init() == (6, 0):
-    print("Pygame successfully initalized ")
-    print("Video driver: {}".format(pygame.display.get_driver()))
-else:
-    print("Oh shit, something is wrong\nError code: 00000000Ex1")
+# set up asset folders
+game_folder = os.path.dirname(__file__)
+img_folder = os.path.join(game_folder, 'img')
+print("Im in path: {}".format(img_folder))
 
 
 class Drawdisplay():
@@ -42,17 +41,10 @@ class Drawdisplay():
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.Surface((50, 50))
-        self.image.fill((0, 0, 0))
+        self.image = pygame.image.load(os.path.join(img_folder,
+                                                    'p1_stand.png')).convert()
         self.rect = self.image.get_rect()
         self.rect.center = (width / 2, height / 2)
-
-    def draw(self):
-        pass
-        # def movement(self):
-        #     pass
-
-        #     pygame.display.flip()
 
 
 def mixer_start(vol):
