@@ -42,9 +42,20 @@ class Player(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load(os.path.join(img_folder,
-                                                    'p1_stand.png')).convert()
+                                                    'p1_stand.png'))
         self.rect = self.image.get_rect()
         self.rect.center = (width / 2, height / 2)
+
+    def movement(self, key):
+        if key[pygame.K_LEFT]:
+            self.rect.x -= 5
+        if key[pygame.K_RIGHT] and self.rect.width < width:
+            self.rect.x += 5
+
+        if key[pygame.K_UP]:
+            self.rect.y -= 5
+        if key[pygame.K_DOWN]:
+            self.rect.y += 5
 
 
 def mixer_start(vol):
@@ -79,11 +90,13 @@ while running:
     if key[pygame.K_ESCAPE]:
         running = False
 
+    player.movement(key)
+
     # Update
     all_sprites.update()
 
     # Drawing stuff
-    game_window.draw_window
+    game_window.draw_window()
     all_sprites.draw(display)
     game_window.draw_text()
 
