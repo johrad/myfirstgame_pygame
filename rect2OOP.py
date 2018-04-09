@@ -6,6 +6,15 @@ pygame.font.init()
 pygame.mixer.init(44100, 16, 2, 4096)
 clock = pygame.time.Clock()
 
+# Defining some colors
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
+BLUE = (0, 0, 255)
+RED = (255, 0, 0)
+GREEN = (0, 255, 0)
+YELLOW = (0, 255, 255)
+
+
 # set up asset folders
 game_folder = os.path.dirname(__file__)
 img_folder = os.path.join(game_folder, 'img')
@@ -15,11 +24,11 @@ print("Im in path: {}".format(img_folder))
 class Drawdisplay():
     def __init__(self):
         global width
+        width = 600
         global height
-        width = 500
-        height = 500
+        height = 600
         global fill_color
-        fill_color = (255, 255, 0)
+        fill_color = BLACK
         self.my_font = pygame.font.SysFont('Arial Black', 17)
 
     def window_init(self):
@@ -33,7 +42,7 @@ class Drawdisplay():
     def draw_text(self):
         text_surface = self.my_font.render(("Version " + version),
                                            False,
-                                           ((0, 0, 0)))
+                                           (RED))
         display.blit(text_surface, (0, 0))
         pygame.display.flip()
 
@@ -46,16 +55,26 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = (width / 2, height / 2)
 
+        # Movement
+        self.vel = 5
+        self.jumpcount = 10
+
     def movement(self, key):
         if key[pygame.K_LEFT]:
-            self.rect.x -= 5
-        if key[pygame.K_RIGHT] and self.rect.width < width:
-            self.rect.x += 5
+            self.rect.x -= self.vel
 
+        if key[pygame.K_RIGHT]:
+            self.rect.x += self.vel
+            # print(self.rect.width)
+            # print(self.rect.height)
         if key[pygame.K_UP]:
-            self.rect.y -= 5
+            self.rect.y -= self.vel
         if key[pygame.K_DOWN]:
-            self.rect.y += 5
+            self.rect.y += self.vel
+
+        # if key[pygame.K_q]:
+        #     print(self.rect.width)
+        #     print(self.rect.height)
 
 
 def mixer_start(vol):
