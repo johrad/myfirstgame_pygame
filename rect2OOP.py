@@ -82,7 +82,7 @@ def mixer_start(vol):
     global jumping_sound_1
 
     jumping_sound_1 = pygame.mixer.Sound('jump.ogg')
-    pygame.mixer.music.load('Backround_intense.ogg')
+    pygame.mixer.music.load('music/10 - The Empire.ogg')
     pygame.mixer.music.set_volume(mixer_volume)
 
     pygame.mixer.music.play(-1, 0.0)
@@ -91,7 +91,7 @@ def mixer_start(vol):
 game_window = Drawdisplay()
 player = Player()
 
-# mixer_start(0.35)
+mixer_start(0.35)
 
 all_sprites = pygame.sprite.Group(player)
 game_window.window_init()
@@ -100,7 +100,7 @@ game_window.draw_text()
 
 running = True
 while running:
-    clock.tick(30)
+    clock.tick(27)
     key = pygame.key.get_pressed()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
