@@ -1,6 +1,6 @@
 import pygame
 import os
-version = "0.00.3"
+version = "0.00.4, STALLED"
 pygame.init()
 pygame.font.init()
 pygame.mixer.init(44100, 16, 2, 4096)
@@ -23,26 +23,32 @@ print("Im in path: {}".format(img_folder))
 
 class Drawdisplay():
     def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
         global width
-        width = 600
+        width = 1000
         global height
-        height = 600
+        height = 1000
         global fill_color
-        fill_color = BLACK
-        self.my_font = pygame.font.SysFont('Arial Black', 17)
+        fill_color = WHITE
+        self.my_font = pygame.font.SysFont('Ubuntu Mono', 30)
 
     def window_init(self):
         global display
         display = pygame.display.set_mode((width, height))
 
     def draw_window(self):
+        self.backdrop = pygame.image.load(os.path.join(img_folder,
+                                                       'backdrop.png'))
+        self.rect = self.backdrop.get_rect() 
+        location = self.rect.left, self.rect.top
         display.fill(fill_color)
+        display.blit(self.backdrop, location)
         pygame.display.flip()
 
     def draw_text(self):
         text_surface = self.my_font.render(("Version " + version),
                                            False,
-                                           (RED))
+                                           (WHITE))
         display.blit(text_surface, (0, 0))
         pygame.display.flip()
 
@@ -65,9 +71,8 @@ class Player(pygame.sprite.Sprite):
 
         if key[pygame.K_RIGHT]:
             self.rect.x += self.vel
-            # print(self.rect.width)
-            # print(self.rect.height)
-        if key[pygame.K_UP]:
+
+        if key[pygame.K_UP] and self.rect.y:
             self.rect.y -= self.vel
         if key[pygame.K_DOWN]:
             self.rect.y += self.vel
@@ -77,36 +82,37 @@ class Player(pygame.sprite.Sprite):
         #     print(self.rect.height)
 
 
-def mixer_start(vol):
-    mixer_volume = vol
-    global jumping_sound_1
-
-    jumping_sound_1 = pygame.mixer.Sound('jump.ogg')
-    pygame.mixer.music.load('music/10 - The Empire.ogg')
-    pygame.mixer.music.set_volume(mixer_volume)
-
-    pygame.mixer.music.play(-1, 0.0)
+# def mixer_start(vol):
+#     mixer_volume = vol
+#     global jumping_sound_1
+#
+#     jumping_sound_1 = pygame.mixer.Sound('jump.ogg')
+#     pygame.mixer.music.load('music/10 - The Empire.ogg')
+#     pygame.mixer.music.set_volume(mixer_volume)
+#
+#     pygame.mixer.music.play(-1, 0.0)
 
 
 game_window = Drawdisplay()
 player = Player()
 
-mixer_start(0.35)
+# mixer_start(0.35)
 
 all_sprites = pygame.sprite.Group(player)
 game_window.window_init()
 game_window.draw_window()
 game_window.draw_text()
 
+# Starting game loop
 running = True
 while running:
-    clock.tick(27)
+    clock.tick(60)
     key = pygame.key.get_pressed()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
 
-    if key[pygame.K_ESCAPE]:
+    if key[pygame.K_ESCAPE] or (key[pygame.K_RSHIFT] and key[pygame.K_q]):
         running = False
 
     player.movement(key)
